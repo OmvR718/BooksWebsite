@@ -1,7 +1,7 @@
 from __future__ import annotations
 from pydantic import BaseModel,EmailStr,ConfigDict
 from datetime import date, datetime, time, timedelta
-from typing import List
+from typing import List , Optional
 # here we define the logic of how data is viewed inputted or outputted
 # from the api into the database or vice versa example is user create we expect the user
 # to be able to sign up and input these data the username the email and the password
@@ -19,6 +19,10 @@ class UserRead(BaseModel):
     updated_at:datetime
     is_active:bool
     books:List["BookRead"] = []
+    
+class UserUpdate(BaseModel):
+    email:Optional[EmailStr] = None
+    password:Optional[str] = None
     
 class BookCreate(BaseModel):
     title:str
