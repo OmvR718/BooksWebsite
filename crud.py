@@ -1,5 +1,5 @@
-from schema import UserCreate,UserRead,UserUpdate
-from models import User
+from schema import UserCreate,UserUpdate,BookRead,BookCreate,FileRead
+from models import User,Book,File
 from sqlalchemy.orm import Session
 ## Function that creates the user in the databse 
 def create_user(db:Session,user:UserCreate):
@@ -32,3 +32,27 @@ def delete_user(db:Session,user_id:int):
     db.delete(db_user)
     db.refresh()
     return
+#Now we come to the part of Book functions
+def create_book(db:Session,book:BookCreate):
+    db_book = Book(**book.model_dump())
+    db.add(db_book)
+    db.commit()
+    db.refresh(db_book)
+    return db_book
+def read_book(db:Session,book_id:int):
+    db_book=db.query(Book).filter(Book.id==book_id).first()
+    return db_book
+def create_file(db:Session):
+    pass ## here we use the util functions that create the file information
+
+def read_file(db:Session,file_id:int):
+    db_file=db.query(File).filter(File.id==file_id)
+    return db_file
+
+## here we write the functions which use the join between two tables they are not many since
+## we didn't define alot of realtionships 
+def user_uploaded_books(db:Session,,user_id:int):
+    return db.query(Book).filter(Book.uploader==user_id).all()
+## returns 1 file per book
+def file_book(db:Session,book_id):
+    return db.query(File).filter(File.book_id==book_id).first()

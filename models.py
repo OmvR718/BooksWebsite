@@ -11,7 +11,7 @@ class User(Base):
     id = Column(Integer,primary_key=True)
     username=Column(String,unique=True,nullable=False)
     email=Column(String,unique=True)
-    hash_password=Column(String,nullable=False)
+    password=Column(String,nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     is_active = Column(Boolean,default=True)
@@ -51,12 +51,12 @@ class Auth(Base):
     __tablename__="auths"
     __table_args__={"schema":"app_schema"}
     s_id=Column(Integer,primary_key=True)
-    user_id=Column(Integer,ForeignKey("users.id"),nullable=False,index=True)
+    user_id=Column(Integer,ForeignKey("app_schema.users.id"),nullable=False,index=True)
     user=relationship("User",back_populates="auths")
-    refresh_token=Column(String(255),nullable=False)
+    refresh_token=Column(String(255),nullable=False,index=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     expires_at = Column(DateTime, default=lambda: datetime.now(timezone.utc)+timedelta(days=7))
-    ip_address=Column(String,unique=True)
+    ip_address=Column(String)
     user_agent=Column(String,nullable=True)
 ## kept to avoid circular refrence 
 User.auths=relationship("Auth",back_populates="user")
