@@ -1,4 +1,4 @@
-from sqlalchemy import URL , create_engine
+from sqlalchemy import URL , create_engine,text
 from sqlalchemy.orm import sessionmaker
 from models import Base
 
@@ -9,9 +9,10 @@ url_object = URL.create(
     host="localhost",
     database="test_db",
 )
-
 engine = create_engine(url_object)
-
+with engine.begin() as conn:
+    conn.execute(text("CREATE SCHEMA IF NOT EXISTS app_schema"))
+Base.metadata.create_all(bind=engine)
 SessionLocal=sessionmaker(autocommit=False,autoflush=False,bind=engine)
 
 def get_db():
@@ -20,4 +21,6 @@ def get_db():
         yield db
     finally:
         db.close()
+        
+
 

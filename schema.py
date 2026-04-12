@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel,EmailStr,ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from datetime import date, datetime, time, timedelta
 from typing import List , Optional
 # here we define the logic of how data is viewed inputted or outputted
@@ -23,24 +23,38 @@ class UserRead(BaseModel):
 class UserUpdate(BaseModel):
     email:Optional[EmailStr] = None
     password:Optional[str] = None
+
+class UserLogin(BaseModel):
+    email:EmailStr
+    password:str
     
 class BookCreate(BaseModel):
     title:str
     description:str
     author_name:str
     visibilty:bool
-    
+
+
+class FileRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    book_id: int
+    file_url: str
+    file_type: str
+    checksum: str
+    uploaded_at: datetime
+
+
 class BookRead(BaseModel):
     model_config=ConfigDict(from_attributes=True)
+    id:int
     title:str
     description:str
     author_name:str
-    uploader:str
+    uploader:int
+    visibilty:bool
     created_at:datetime
     updated_at:datetime
-    
-class FileRead(BaseModel):
-    model_config=ConfigDict(from_attributes=True)
-    uploaded_at:datetime
-    file_type:str
-    file_url:str
+    file_path: Optional[str] = None
+    file_type: Optional[str] = None
+    files: List[FileRead] = Field(default_factory=list)

@@ -21,10 +21,10 @@ class Book(Base):
     __tablename__="books"
     __table_args__={"schema":"app_schema"}
     id = Column(Integer,primary_key=True)
-    title=Column(String,index=True,nullable=False)
+    title=Column(String,unique=True,nullable=False)
     description=Column(String,nullable=False)
     author_name=Column(String,nullable=False)
-    uploader=Column(Integer,ForeignKey("users.id"),nullable=False)
+    uploader=Column(Integer,ForeignKey("app_schema.users.id"),nullable=False)
     owner=relationship("User",back_populates="books") ## defines the 1:M mapping between users and books 
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
@@ -39,13 +39,17 @@ class File(Base):
     __table_args__={"schema":"app_schema"}
     id=Column(Integer,primary_key=True)
     file_url=Column(String(255),nullable=False)
-    book_id=Column(Integer,ForeignKey("books.id"),nullable=False,index=True)
+    book_id=Column(Integer,ForeignKey("app_schema.books.id"),nullable=False,index=True)
     book=relationship("Book",back_populates="files")
     file_type=Column(String,nullable=False)
     checksum=Column(String(64),nullable=False)
     uploaded_at=Column(DateTime, default=lambda: datetime.now(timezone.utc))
 #same as before kept to avoid circular refrences
-Book.files=relationship("File",back_populates="book")
+Book.files = relationship(
+    "File",
+    back_populates="book",
+    cascade="all, delete-orphan",
+)
 #defines the authentication/session table where the backend of the client can use to validate users
 class Auth(Base):
     __tablename__="auths"
