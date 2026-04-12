@@ -7,7 +7,7 @@ Backend API for a book-sharing service: users sign up, authenticate with JWTs, u
 - **Users**: registration (`/signup`), login with access and refresh tokens (`/login`), profile read/update/delete
 - **Books**: multipart upload with metadata, optional extra files per book, public metadata and file download for books marked visible
 - **Integrity**: SHA-256 checksums stored per file; downloads are verified against the database before streaming
-- **Auth**: Bearer JWT for protected routes; multipart uploads support pasting the token in Swagger’s form field when the Authorization header is awkward
+- **Auth**: Bearer JWT for protected routes; multipart uploads support pasting the token in Swagger’s form field
 
 ## Tech stack
 
